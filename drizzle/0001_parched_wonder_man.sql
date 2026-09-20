@@ -1,0 +1,23 @@
+CREATE TABLE `reports` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`fileKey` varchar(512),
+	`fileUrl` varchar(1024),
+	`fileName` varchar(255) NOT NULL,
+	`mimeType` varchar(128) NOT NULL,
+	`fileSize` int NOT NULL,
+	`status` enum('processing','completed','failed') NOT NULL DEFAULT 'processing',
+	`company` varchar(255),
+	`period` varchar(128),
+	`headline` text,
+	`summary` text,
+	`highlights` text,
+	`metrics` text,
+	`risks` text,
+	`actions` text,
+	`sentiment` varchar(32),
+	`confidence` int,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `reports_id` PRIMARY KEY(`id`)
+);
