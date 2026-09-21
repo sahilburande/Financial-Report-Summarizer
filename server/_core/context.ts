@@ -1,6 +1,5 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { User } from "../../drizzle/schema";
-import { sdk } from "./sdk";
 
 export type TrpcContext = {
   req: CreateExpressContextOptions["req"];
@@ -8,21 +7,26 @@ export type TrpcContext = {
   user: User | null;
 };
 
+// FinBrief is deployed as a public demo. Authentication is intentionally
+// disabled so the app does not depend on the original Manus OAuth service.
+const GUEST_USER: User = {
+  id: 0,
+  openId: "guest",
+  name: "Guest",
+  email: null,
+  loginMethod: "guest",
+  role: "user",
+  createdAt: new Date(0),
+  updatedAt: new Date(0),
+  lastSignedIn: new Date(),
+};
+
 export async function createContext(
   opts: CreateExpressContextOptions
 ): Promise<TrpcContext> {
-  let user: User | null = null;
-
-  try {
-    user = await sdk.authenticateRequest(opts.req);
-  } catch (error) {
-    // Authentication is optional for public procedures.
-    user = null;
-  }
-
   return {
     req: opts.req,
     res: opts.res,
-    user,
+    user: GUEST_USER,
   };
 }
